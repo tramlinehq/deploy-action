@@ -1,6 +1,9 @@
 # action.yml
 name: 'Configure Tramline'
 description: 'Checkout the correct ref & parse JSON inputs'
+branding:
+  icon: 'arrow-down-circle'
+  color: 'green'
 inputs:
   input:
     description: "Input from Tramline as a JSON blob"
