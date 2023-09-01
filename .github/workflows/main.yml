@@ -1,0 +1,26 @@
+name: Test
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      tramline-input:
+        required: false
+
+jobs:
+  deploy_job:
+    runs-on: ubuntu-latest
+    name: A job to test tramline deploys
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Deploy
+        uses: ./ # Uses the action in the root directory
+        id: tramline
+        with:
+          input: ${{ github.event.inputs.tramline-input }}
+      - name: Get the output
+        run: |
+          echo "vcode: ${{ steps.tramline.outputs.version_code }}"
+          echo "vname: ${{ steps.tramline.outputs.version_name }}"
+          echo "cref: ${{ steps.tramline.outputs.commit_ref }}"

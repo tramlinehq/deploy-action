@@ -1,0 +1,30 @@
+# action.yml
+name: 'Configure Tramline'
+description: 'Checkout the correct ref & parse JSON inputs'
+inputs:
+  input:
+    description: "Input from Tramline as a JSON blob"
+    required: true
+    default: "{}"
+outputs:
+  version_code:
+    description: 'the version code (build number) for the build'
+    value: ${{ steps.tramline.outputs.version_code }}
+  version_name:
+    description: 'the version name for the build'
+    value: ${{ steps.tramline.outputs.version_name }}
+  commit_ref:
+    description: 'the commit for which this workflow is triggered'
+    value: ${{ steps.tramline.outputs.commit_ref }}
+runs:
+  using: "composite"
+  steps:
+    - name: Parse inputs from Tramline
+      run: ./parse_inputs.sh ${{ inputs.input }}
+      id: tramline
+      shell: bash
+
+    - name: Checkout the repo
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ steps.tramline.outputs.commit_ref }}
