@@ -1,6 +1,6 @@
 # Tramline Deploy Action for GitHub
 
-This allows a more seamless experience integrating Tramline with your CI workflows.
+This allows for a more seamless experience integrating Tramline with your CI workflows.
 
 See [action.yml](action.yml).
 
@@ -20,15 +20,19 @@ Add this step to your workflow. This step also runs the `checkout` against the c
 
 ```yaml
 steps:
-    - name: Configure Tramline
+  - name: Configure Tramline
     id: tramline
     uses: tramlinehq/deploy-action@v0.1.5
     with:
         input: ${{ github.event.inputs.tramline-input }}
 ```
 
-You will now be able to use the following outputs from this step:
+You can now use the following outputs from this step:
 
 1. `steps.tramline.outputs.version_code`
 2. `steps.tramline.outputs.version_name`
-3. `steps.tramline.outputs.commit_ref`
+
+Optionally,
+
+1. `steps.tramline.outputs.commit_ref`
+2. `steps.tramline.outputs.build_notes`
