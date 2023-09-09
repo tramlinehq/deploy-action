@@ -37,7 +37,7 @@ runs:
         fi
 
         # Parse JSON and store keys in an array
-        echo ${{ inputs.input }} > tramline_input.json
+        echo '${{ inputs.input }}' > tramline_input.json
         keys=()
         while read -r value
         do
