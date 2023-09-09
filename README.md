@@ -24,7 +24,7 @@ steps:
     id: tramline
     uses: tramlinehq/deploy-action@v0.1.5
     with:
-        input: ${{ github.event.inputs.tramline-input }}
+      input: ${{ github.event.inputs.tramline-input }}
 ```
 
 You can now use the following outputs from this step:
