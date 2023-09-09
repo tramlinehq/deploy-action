@@ -26,12 +26,32 @@ runs:
       run: |
         echo "Starting tramline input parsing..."
 
-        # Install jq if it doesn't exist
-        if ! command -v jq &> /dev/null
-        then
+        # Check if jq is already installed
+        if ! command -v jq &> /dev/null; then
             echo "jq is not installed. Installing..."
-            sudo apt-get update
-            sudo apt-get install -y jq
+
+            # Determine the OS platform
+            OS=$(uname -s)
+            case $OS in
+            "Linux")
+                OS="linux64"
+                ;;
+            "Darwin")
+                OS="osx-amd64"
+                ;;
+            *)
+                echo "Error: Unsupported operating system."
+                exit 1
+                ;;
+            esac
+
+            # Download jq binary as a tarball
+            wget -O jq.tar.gz "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-${OS}"
+
+            # Extract and install jq
+            tar -xzf jq.tar.gz
+            chmod +x jq
+            sudo mv jq /usr/local/bin/
         else
             echo "jq is already installed. Skipping..."
         fi
@@ -64,6 +84,7 @@ runs:
 
         # Cleanup
         rm -f tramline_input.json
+        rm -f jq.tar.gz
         echo "Finishing up tramline input parsing..."
       id: tramline
       shell: bash
