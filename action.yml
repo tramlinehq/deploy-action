@@ -19,6 +19,9 @@ outputs:
   commit_ref:
     description: 'the commit for which this workflow is triggered'
     value: ${{ steps.tramline.outputs.commit_ref }}
+  build_notes:
+    description: 'the testing notes for the build'
+    value: ${{ steps.tramline.outputs.build_notes }}
 runs:
   using: "composite"
   steps:
