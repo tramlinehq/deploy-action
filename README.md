@@ -22,7 +22,7 @@ Add this step to your workflow. This step also runs the `checkout` against the c
 steps:
   - name: Configure Tramline
     id: tramline
-    uses: tramlinehq/deploy-action@v0.1.5
+    uses: tramlinehq/deploy-action@v0.1.6
     with:
       input: ${{ github.event.inputs.tramline-input }}
 ```
