@@ -23,3 +23,4 @@ jobs:
           echo "vcode: ${{ steps.tramline.outputs.version_code }}"
           echo "vname: ${{ steps.tramline.outputs.version_name }}"
           echo "cref: ${{ steps.tramline.outputs.commit_ref }}"
+          echo "cref: ${{ steps.tramline.outputs.build_notes }}"
