@@ -93,6 +93,6 @@ runs:
       shell: bash
 
     - name: Checkout the repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ steps.tramline.outputs.commit_ref }}
