@@ -25,40 +25,16 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: setup-jq
+      uses: dcarbone/install-jq-action@v2.1.0
+      with:
+          version: '1.7'
+          # Setting this to true will install the version you specify into the tool cache
+          # superseding the preinstalled version
+          force: true
+
     - name: Parse inputs from Tramline
       run: |
-        echo "Starting tramline input parsing..."
-
-        # Check if jq is already installed
-        if ! command -v jq &> /dev/null; then
-            echo "jq is not installed. Installing..."
-
-            # Determine the OS platform
-            OS=$(uname -s)
-            case $OS in
-            "Linux")
-                OS="linux64"
-                ;;
-            "Darwin")
-                OS="osx-amd64"
-                ;;
-            *)
-                echo "Error: Unsupported operating system."
-                exit 1
-                ;;
-            esac
-
-            # Download jq binary as a tarball
-            wget -O jq.tar.gz "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-${OS}"
-
-            # Extract and install jq
-            tar -xzf jq.tar.gz
-            chmod +x jq
-            sudo mv jq /usr/local/bin/
-        else
-            echo "jq is already installed. Skipping..."
-        fi
-
         # Parse JSON and store keys in an array
         echo '${{ inputs.input }}' > tramline_input.json
         keys=()
