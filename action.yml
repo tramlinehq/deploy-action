@@ -51,15 +51,18 @@ runs:
         for key in $keys; do
             # Set output in a temp file to avoid large variables
             tmp_file=$(mktemp)
-            jq -r --arg k "$key" '.[$k]' tramline_input.json > "$tmp_file"
 
-            # Handle multi-line strings as per:
-            # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#multiline-strings
-            {
-              echo -n "$key="
-              cat "$tmp_file"
-              echo EOF
-            } >> "$GITHUB_OUTPUT"
+            jq -r --arg k "$key" '.[$k]' tramline_input.json | \
+            awk '{
+                # Replace literal newlines with %0A
+                gsub(/\n/,"%0A");
+                # Replace bullet points with their encoded form
+                gsub(/•/,"%E2%80%A2");
+                # Print the processed line
+                print
+            }' > "$tmp_file"
+
+            echo "${key}=$(cat "$tmp_file")"
 
             # Remove temp file
             rm -f "$tmp_file"
