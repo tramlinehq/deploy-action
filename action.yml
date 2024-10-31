@@ -58,6 +58,7 @@ runs:
             {
               echo -n "$key="
               cat "$tmp_file"
+              echo EOF
             } >> "$GITHUB_OUTPUT"
 
             # Remove temp file
