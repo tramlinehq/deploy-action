@@ -35,13 +35,11 @@ runs:
 
     - name: Parse inputs from Tramline
       run: |
-        # Parse JSON and store keys in an array
+        # Read JSON
         echo '${{ inputs.input }}' > tramline_input.json
-        keys=()
-        while read -r value
-        do
-            keys+=("$value")
-        done < <(jq -c 'keys_unsorted[]' tramline_input.json)
+
+        # Parse JSON and store keys
+        keys=$(jq -r 'keys_unsorted[]' tramline_input.json)
 
         # Exit if there are parse errors
         if [ -z "$keys" ]; then
@@ -50,11 +48,9 @@ runs:
         fi
 
         # Loop through the keys and set variables
-        for key in "${keys[@]}"; do
+        for key in $keys; do
             # Get the value of the key from JSON
-            value=$(jq -r ".$key" tramline_input.json)
-            # Remove double quotes from key
-            key="${key//\"/}"
+            value=$(jq -r --arg k "$key" '.[$k]' tramline_input.json)
             # Assign the value to a variable with a name based on the key
             output="${key}=${value}"
             # Output
@@ -63,7 +59,6 @@ runs:
 
         # Cleanup
         rm -f tramline_input.json
-        rm -f jq.tar.gz
         echo "Finishing up tramline input parsing..."
       id: tramline
       shell: bash
