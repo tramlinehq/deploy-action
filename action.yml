@@ -41,6 +41,9 @@ runs:
         # Parse JSON and store keys
         keys=$(jq -r 'keys_unsorted[]' tramline_input.json)
 
+        echo "exiting after jq"
+        exit 1
+
         # Exit if there are parse errors
         if [ -z "$keys" ]; then
             echo "Error parsing Tramline inputs. Exiting..."
@@ -65,6 +68,9 @@ runs:
             # Remove temp file
             rm -f "$tmp_file"
         done
+
+        echo "exiting after output"
+        exit 1
 
         # Cleanup
         rm -f tramline_input.json
