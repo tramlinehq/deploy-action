@@ -35,6 +35,9 @@ runs:
 
     - name: Parse inputs from Tramline
       run: |
+        echo "exiting before reading"
+        exit 1
+
         # Read JSON
         echo '${{ inputs.input }}' > tramline_input.json
 
