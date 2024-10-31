@@ -25,29 +25,22 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: setup-jq
-      uses: dcarbone/install-jq-action@v2.1.0
-      with:
-        version: '1.7'
-        # Setting this to true will install the version you specify into the tool cache
-        # superseding the preinstalled version
-        force: true
-
     - name: Parse Tramline Input
       shell: python
+      id: tramline
       run: |
         import json
         import os
         
-        print("Debug: Starting script")
+        print("deploy-action: starting")
         
-        # Parse input JSON
+        # Read input JSON
         input_json = r'''${{ inputs.input }}'''
-        print("Debug: Input received")
+        print("deploy-action: input received")
         
         # Parse and process
         data = json.loads(input_json)
-        print("Debug: JSON parsed successfully")
+        print("deploy-action: JSON parsed successfully")
         
         # Write outputs
         with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
@@ -56,78 +49,7 @@ runs:
                 f.write(f"{value}\n")
                 f.write("EOF\n")
 
-        print("Debug: Outputs written")
-
-    - name: Parse inputs from Tramline
-      run: |
-        echo "Debug: Starting script"
-
-        # Store input in a variable
-        INPUT_JSON='${{ inputs.input }}'
-        echo "Debug: Input length: ${INPUT_JSON}"
-
-        # Try parsing directly with jq
-        echo "Debug: Attempting direct jq parse"
-        echo "$INPUT_JSON" | jq -r 'keys_unsorted[]'
-
-        if [ $? -eq 0 ]; then
-          echo "Debug: JQ parse successful"
-        else
-          echo "Debug: JQ parse failed"
-          echo "Debug: Raw input:"
-          echo "$INPUT_JSON"
-          exit 1
-        fi
-
-        echo "exiting before reading"
-        exit 1
-
-        # Read JSON
-        echo '${{ inputs.input }}' > tramline_input.json
-
-        echo "exiting before jq"
-        exit 1
-
-        # Parse JSON and store keys
-        keys=$(jq -r 'keys_unsorted[]' tramline_input.json)
-
-        echo "exiting after jq"
-        exit 1
-
-        # Exit if there are parse errors
-        if [ -z "$keys" ]; then
-            echo "Error parsing Tramline inputs. Exiting..."
-            exit 1
-        fi
-
-        # Iterate through the keys and set variables
-        for key in $keys; do
-            # Set output in a temp file to avoid large variables
-            tmp_file=$(mktemp)
-
-            jq -r --arg k "$key" '.[$k]' tramline_input.json | \
-            awk '{
-                # Replace literal newlines with %0A
-                gsub(/\n/,"%0A");
-                # Print the processed line
-                print
-            }' > "$tmp_file"
-
-            echo "${key}=$(cat "$tmp_file")"
-
-            # Remove temp file
-            rm -f "$tmp_file"
-        done
-
-        echo "exiting after output"
-        exit 1
-
-        # Cleanup
-        rm -f tramline_input.json
-        echo "Finishing up tramline input parsing..."
-
-      id: tramline
-      shell: bash
+        print("deploy-action: outputs written successfully")
 
     - name: Checkout the repo
       uses: actions/checkout@v4
