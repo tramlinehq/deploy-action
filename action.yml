@@ -28,10 +28,35 @@ runs:
     - name: setup-jq
       uses: dcarbone/install-jq-action@v2.1.0
       with:
-          version: '1.7'
-          # Setting this to true will install the version you specify into the tool cache
-          # superseding the preinstalled version
-          force: true
+        version: '1.7'
+        # Setting this to true will install the version you specify into the tool cache
+        # superseding the preinstalled version
+        force: true
+
+    - name: Parse Tramline Input
+      shell: python
+      run: |
+        import json
+        import os
+        
+        print("Debug: Starting script")
+        
+        # Parse input JSON
+        input_json = '''${{ inputs.input }}'''
+        print("Debug: Input received")
+        
+        # Parse and process
+        data = json.loads(input_json)
+        print("Debug: JSON parsed successfully")
+        
+        # Write outputs
+        with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+            for key, value in data.items():
+                f.write(f"{key}<<EOF\n")
+                f.write(f"{value}\n")
+                f.write("EOF\n")
+        
+        print("Debug: Outputs written")
 
     - name: Parse inputs from Tramline
       run: |
@@ -39,7 +64,7 @@ runs:
 
         # Store input in a variable
         INPUT_JSON='${{ inputs.input }}'
-        echo "Debug: Input length: ${#INPUT_JSON}"
+        echo "Debug: Input length: ${INPUT_JSON}"
 
         # Try parsing directly with jq
         echo "Debug: Attempting direct jq parse"
@@ -100,10 +125,7 @@ runs:
         # Cleanup
         rm -f tramline_input.json
         echo "Finishing up tramline input parsing..."
-        EOL
 
-        chmod +x parse_input.sh
-        ./parse_input.sh
       id: tramline
       shell: bash
 
