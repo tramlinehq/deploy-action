@@ -42,7 +42,7 @@ runs:
         print("Debug: Starting script")
         
         # Parse input JSON
-        input_json = '''${{ inputs.input }}'''
+        input_json = r'''${{ inputs.input }}'''
         print("Debug: Input received")
         
         # Parse and process
@@ -55,7 +55,7 @@ runs:
                 f.write(f"{key}<<EOF\n")
                 f.write(f"{value}\n")
                 f.write("EOF\n")
-        
+
         print("Debug: Outputs written")
 
     - name: Parse inputs from Tramline
