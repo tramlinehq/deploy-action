@@ -47,10 +47,21 @@ runs:
             exit 1
         fi
 
-        # Loop through the keys and set variables
+        # Iterate through the keys and set variables
         for key in $keys; do
-            value=$(jq -r --arg k "$key" '.[$k]' tramline_input.json)
-            echo "$key=\"$value\"" >> "$GITHUB_OUTPUT"
+            # Set output in a temp file to avoid large variables
+            tmp_file=$(mktemp)
+            jq -r --arg k "$key" '.[$k]' tramline_input.json > "$tmp_file"
+
+            # Handle multi-line strings as per:
+            # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#multiline-strings
+            {
+              echo -n "$key="
+              cat "$tmp_file"
+            } >> "$GITHUB_OUTPUT"
+
+            # Remove temp file
+            rm -f "$tmp_file"
         done
 
         # Cleanup
