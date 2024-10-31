@@ -49,12 +49,8 @@ runs:
 
         # Loop through the keys and set variables
         for key in $keys; do
-            # Get the value of the key from JSON
             value=$(jq -r --arg k "$key" '.[$k]' tramline_input.json)
-            # Assign the value to a variable with a name based on the key
-            output="${key}=${value}"
-            # Output
-            echo $output >> "$GITHUB_OUTPUT"
+            echo "$key=\"$value\""
         done
 
         # Cleanup
