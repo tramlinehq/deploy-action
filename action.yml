@@ -38,6 +38,9 @@ runs:
         # Read JSON
         echo '${{ inputs.input }}' > tramline_input.json
 
+        echo "exiting before jq"
+        exit 1
+
         # Parse JSON and store keys
         keys=$(jq -r 'keys_unsorted[]' tramline_input.json)
 
