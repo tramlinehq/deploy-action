@@ -50,7 +50,7 @@ runs:
         # Loop through the keys and set variables
         for key in $keys; do
             value=$(jq -r --arg k "$key" '.[$k]' tramline_input.json)
-            echo "$key=\"$value\""
+            echo "$key=\"$value\"" >> "$GITHUB_OUTPUT"
         done
 
         # Cleanup
