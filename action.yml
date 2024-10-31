@@ -35,6 +35,25 @@ runs:
 
     - name: Parse inputs from Tramline
       run: |
+        echo "Debug: Starting script"
+
+        # Store input in a variable
+        INPUT_JSON='${{ inputs.input }}'
+        echo "Debug: Input length: ${#INPUT_JSON}"
+
+        # Try parsing directly with jq
+        echo "Debug: Attempting direct jq parse"
+        echo "$INPUT_JSON" | jq -r 'keys_unsorted[]'
+
+        if [ $? -eq 0 ]; then
+          echo "Debug: JQ parse successful"
+        else
+          echo "Debug: JQ parse failed"
+          echo "Debug: Raw input:"
+          echo "$INPUT_JSON"
+          exit 1
+        fi
+
         echo "exiting before reading"
         exit 1
 
