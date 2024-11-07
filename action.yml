@@ -25,7 +25,10 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - run: python --version
+    
+    - name: print
+      shell: bash
+      run: python --version
   
     - name: setup-python
       uses: actions/setup-python@v5
@@ -33,7 +36,9 @@ runs:
          python-version: '3.13'
       run: python --version
 
-    - run: python --version
+    - name: print
+      shell: bash
+      run: python --version
         
     - name: Parse Tramline Input
       shell: python
