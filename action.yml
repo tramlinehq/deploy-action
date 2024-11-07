@@ -25,11 +25,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    
-    - name: print
-      shell: bash
-      run: python --version
-  
     - name: setup-python
       uses: actions/setup-python@v5
       with:
